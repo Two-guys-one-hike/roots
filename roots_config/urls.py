@@ -22,4 +22,7 @@ urlpatterns = [
 
     # JWT authentication
     path('account/', include('apps.account.urls')),
+
+    # Core apps
+    path('', include('apps.core.api.urls')),
 ]

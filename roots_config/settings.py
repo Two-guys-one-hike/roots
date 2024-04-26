@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     
     # our apps
     'apps.account',
+    'apps.core',
     'apps.post',
 ]
 
