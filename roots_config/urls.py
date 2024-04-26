@@ -20,9 +20,9 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    # JWT authentication
+    # Account views and APIs
     path('account/', include('apps.account.urls')),
 
-    # Core apps
-    path('', include('apps.core.api.urls')),
+    # Core views and APIs
+    path('', include('apps.core.urls')),
 ]
