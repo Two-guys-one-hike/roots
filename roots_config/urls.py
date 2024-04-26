@@ -20,6 +20,9 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
 
+    # Browsable API authentication
+    path('api-auth/', include('rest_framework.urls')),
+
     # APIs
     path('api/', include([
         path('', include('apps.core.api.urls')),
