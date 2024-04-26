@@ -20,4 +20,3 @@ class LogoutView(APIView):
         except Exception as e:
             print(e)  # TODO log exception
         return Response(status=status.HTTP_400_BAD_REQUEST)
-
