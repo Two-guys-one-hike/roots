@@ -46,9 +46,14 @@ class HomeAPIViewTestCase(APITestCase):
         # Make the request for logout as authenticated user
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.access_token}")
         response = self.client.get(self.home_url)
+        response_data = json_load(response.content)
 
         # Assertion for a successful logout
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(
+            response_data["message"],
+            "Welcome to the JWT Authentication page using React JS and Django.",
+        )
 
     def test_homepage_not_authenticated(self):
         # Make the request for logout as unauthenticated user
