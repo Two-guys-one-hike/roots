@@ -22,11 +22,11 @@ class LogoutAPIView(APIView):
             if serializer.is_valid():
                 return Response(status=status.HTTP_205_RESET_CONTENT)
             else:
-                data = {"error": "Refresh token not provided"}
+                data = {'error': 'Refresh token not provided'}
                 logger.warning(
-                    f"{self.__class__.__name__} - refresh token not provided - {request.data}"
+                    f'{self.__class__.__name__} - refresh token not provided - {request.data}'
                 )
         except Exception as e:
-            data = {"error": str(e)}
-            logger.warning(f"{self.__class__.__name__} - validation error - {e}")
+            data = {'error': str(e)}
+            logger.warning(f'{self.__class__.__name__} - validation error - {e}')
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)

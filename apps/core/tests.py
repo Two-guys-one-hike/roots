@@ -20,7 +20,7 @@ class HomeAPIViewTestCase(APITestCase):
         - visit home authenticated
     """
 
-    home_url = reverse("home")
+    home_url = reverse('home')
 
     def setUp(self):
         """
@@ -28,31 +28,31 @@ class HomeAPIViewTestCase(APITestCase):
         """
 
         # Create a new user
-        username = "anon"
-        password = "Change_me_123!"
+        username = 'anon'
+        password = 'Change_me_123!'
         UserModel.objects.create_user(username=username, password=password)
 
         # Make the request for login with user and retrieve JWT tokens
-        login_url = reverse("token_obtain_pair")
-        payload = {"username": username, "password": password}
-        response = self.client.post(login_url, data=payload, format="json")
+        login_url = reverse('token_obtain_pair')
+        payload = {'username': username, 'password': password}
+        response = self.client.post(login_url, data=payload, format='json')
         response_data = json_load(response.content)
 
         # Save JWT tokens for authentication during test
-        self.access_token = response_data["access"]
-        self.refresh_token = response_data["refresh"]
+        self.access_token = response_data['access']
+        self.refresh_token = response_data['refresh']
 
     def test_homepage_successful(self):
         # Make the request for logout as authenticated user
-        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.access_token}")
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
         response = self.client.get(self.home_url)
         response_data = json_load(response.content)
 
         # Assertion for a successful logout
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(
-            response_data["message"],
-            "Welcome to the JWT Authentication page using React JS and Django.",
+            response_data['message'],
+            'Welcome to the JWT Authentication page using React JS and Django.',
         )
 
     def test_homepage_not_authenticated(self):
