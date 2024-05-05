@@ -30,3 +30,17 @@ class LogoutAPIView(APIView):
             data = {'error': str(e)}
             logger.warning(f'{self.__class__.__name__} - validation error - {e}')
         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        user = {
+            'username': request.user.username,
+            'email': request.user.email,
+            'first_name': request.user.first_name,
+            'last_name': request.user.last_name,
+            'is_staff': request.user.is_staff,
+        }
+        return Response(data=user, status=status.HTTP_200_OK)

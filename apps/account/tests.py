@@ -93,3 +93,70 @@ class LogoutAPIViewTestCase(APITestCase):
 
         # Assertion for an unauthorized logout
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+class UserAPIViewTestCase(APITestCase):
+    """
+    UserAPIView test case.
+
+    supported methods:
+    - GET
+        cases:
+        - retrieve user not authenticated
+        - retrieve user authenticated
+    """
+
+    user_url = reverse('user_api')
+
+    def setUp(self):
+        """
+        Initial setup that will be performed before each test
+        """
+
+        # Create a new user
+        username = 'anon'
+        password = 'Change_me_123!'
+        first_name = 'anon name'
+        last_name = 'anon surname'
+        email = 'anon email'
+        UserModel.objects.create_user(
+            username=username,
+            password=password,
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+        )
+
+        # Make the request for login with user and retrieve JWT tokens
+        login_url = reverse('token_obtain_pair')
+        payload = {'username': username, 'password': password}
+        response = self.client.post(login_url, data=payload, format='json')
+        response_data = json_load(response.content)
+
+        # Save JWT tokens for authentication during test
+        self.access_token = response_data['access']
+        self.refresh_token = response_data['refresh']
+        self.user_data = {
+            'username': username,
+            'email': email,
+            'first_name': first_name,
+            'last_name': last_name,
+            'is_staff': False,
+        }
+
+    def test_retrieve_user_successful(self):
+        # Make the request for logout as authenticated user
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
+        response = self.client.get(self.user_url)
+        response_data = json_load(response.content)
+
+        # Assertion for a successful retrieve user
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response_data, self.user_data)
+
+    def test_retrieve_user_not_authenticated(self):
+        # Make the request for logout as authenticated user
+        response = self.client.get(self.user_url)
+
+        # Assertion for a failing retrieve user cause missing authentication
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
